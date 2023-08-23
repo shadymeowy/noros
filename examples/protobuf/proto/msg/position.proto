@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message Position {
+  double timestamp = 1;
+  double x = 2;
+  double y = 3;
+  double z = 4;
+}
