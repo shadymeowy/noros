@@ -87,8 +87,13 @@ class Node:
                 callback(socket)
 
     def spin(self):
-        while not self._shutdown:
-            self.spin_once()
+        try:
+            while not self._shutdown:
+                self.spin_once()
+        except KeyboardInterrupt:
+            print("Shutting down...")
+        finally:
+            self.close()
 
     def close(self):
         # self.context.term()
