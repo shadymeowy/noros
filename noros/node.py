@@ -3,6 +3,7 @@ from .publisher import Publisher
 from .subscriber import Subscriber
 from .service import Service
 from .service_client import ServiceClient
+from .rate import Rate
 
 
 class Node:
@@ -75,6 +76,8 @@ class Node:
         self.poller = poller
 
     def spin_once(self, timeout=None):
+        if timeout is not None:
+            timeout = int(timeout * 1000)
         socks = dict(self.poller.poll(timeout=timeout))
         for sub in self.subs:
             if sub.socket in socks and socks[sub.socket] == zmq.POLLIN:
@@ -94,6 +97,9 @@ class Node:
             print("Shutting down...")
         finally:
             self.close()
+
+    def rate(self, hz):
+        return Rate(hz, self.spin_once)
 
     def close(self):
         # self.context.term()
