@@ -28,6 +28,8 @@ class ServiceClient:
         self.callback(res)
         return res
 
+    __call__ = call
+
     def wait_for_service(self):
         while True:
             self.pub.send(self.uid)
