@@ -2,7 +2,7 @@ def serializer(typ):
     if hasattr(typ, 'SerializeToString'):
         return lambda x: x.SerializeToString()
     elif hasattr(typ, 'pack'):
-        return lambda x: x.pack()
+        return lambda x: typ.pack(*x)
     elif typ is bytes:
         return lambda x: x
     elif typ is str:
