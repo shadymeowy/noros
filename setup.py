@@ -13,6 +13,7 @@ setup(
         'console_scripts': [
             'noros = noros.cli:main',
             'noros-mavlink = noros.helpers.mavlink:mavlink_bridge',
+            'noros-mavlink-router = noros.helpers.mavlink:mavlink_router'
         ],
     },
 )
