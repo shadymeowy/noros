@@ -19,8 +19,8 @@ def MavlinkMessage(o):
 
 def mavlink_bridge():
     parser = argparse.ArgumentParser()
-    parser.add_argument('address', default="udp:localhost:14551",
-                        help="The mavlink connection string")
+    parser.add_argument('address', default="udp:localhost:14550",
+                        help="The mavlink connection string", nargs='?')
     parser.add_argument('--topic_dir', '-t',
                         default="/mavlink", help="The topic directory")
     parser.add_argument('--dialect', '-d', default="all",
@@ -70,7 +70,7 @@ def mavlink_bridge():
     topic_cmd = "{}/cmd".format(args.topic_dir)
     sv_cmd = node.service(topic_cmd, send, bool, MavlinkMessage)
 
-    print("Publishing messages")
+    print("Publishing messages on", args.topic_dir, "from", args.address)
     node.spin()
 
     sub_sink.close()
