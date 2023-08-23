@@ -11,12 +11,14 @@ from pymavlink.dialects.v20 import all as mavlink
 mavl = mavlink.MAVLink(None)
 
 
-def MavlinkMessage(o):
-    if isinstance(o, (bytes, bytearray)):
-        msg = mavl.parse_char(o)
-    else:
-        msg = o.pack(mavl)
-    return msg
+class MavlinkMessage:
+    @staticmethod
+    def deserialize(buf):
+        return mavl.parse_char(buf)
+
+    @staticmethod
+    def serialize(msg):
+        return msg.pack(mavl)
 
 
 def mavlink_bridge():

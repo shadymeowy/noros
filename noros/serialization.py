@@ -3,6 +3,8 @@ def serializer(typ):
         return lambda x: x.SerializeToString()
     elif hasattr(typ, 'pack'):
         return lambda x: typ.pack(*x)
+    elif hasattr(typ, 'serialize'):
+        return typ.serialize
     elif typ is bytes:
         return lambda x: x
     elif typ is str:
@@ -22,6 +24,8 @@ def deserializer(typ):
         return ProtoConstructor(typ)
     elif hasattr(typ, 'unpack'):
         return typ.unpack
+    elif hasattr(typ, 'deserialize'):
+        return typ.deserialize
     elif typ is bytes:
         return lambda x: x
     elif typ is str:
