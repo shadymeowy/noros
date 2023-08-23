@@ -30,37 +30,41 @@ target_system = 1
 target_component = 1
 
 
-def wait_ack(command):
+def send_command_long(sysid, compid, command, *params):
+    if len(params) > 7:
+        raise ValueError("Too many parameters")
+    else:
+        params += (0,) * (7 - len(params))
+    msg = mavl.command_long_encode(
+        sysid,
+        compid,
+        command,
+        0,
+        *params)
+    sv_cmd.call(msg)
     while True:
         msg = sub_ack.recv()[0]
+        print(msg)
         if msg.command == command:
             break
 
 
 def set_mode(base_mode, custom_mode, custom_sub_mode):
-    mode_msg = mavl.command_long_encode(
+    return send_command_long(
         target_system,
         target_component,
         mavlink.MAV_CMD_DO_SET_MODE,
-        0,
         base_mode,
         custom_mode,
-        custom_sub_mode,
-        0, 0, 0, 0)
-    sv_cmd.call(mode_msg)
-    wait_ack(mavlink.MAV_CMD_DO_SET_MODE)
+        custom_sub_mode)
 
 
 def set_arm(arm=True):
-    arm_msg = mavl.command_long_encode(
+    return send_command_long(
         target_system,
         target_component,
         mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
-        0,
-        1 if arm else 0,
-        0, 0, 0, 0, 0, 0)
-    sv_cmd.call(arm_msg)
-    wait_ack(mavlink.MAV_CMD_COMPONENT_ARM_DISARM)
+        1 if arm else 0)
 
 
 def send_setpoint(x, y, z):
