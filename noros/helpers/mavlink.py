@@ -31,9 +31,17 @@ def mavlink_bridge():
                         help="The mavlink dialect")
     parser.add_argument('--mavlink20', '-2',
                         action="store_true", help="Use mavlink 2.0")
+    parser.add_argument(
+        '--sub_conn', '-s',
+        default="ipc:///tmp/sub",
+        help="The connection string for the subscriber")
+    parser.add_argument(
+        '--pub_conn', '-p',
+        default="ipc:///tmp/pub",
+        help="The connection string for the publisher")
     args = parser.parse_args()
 
-    node = Node()
+    node = Node(sub_conn=args.sub_conn, pub_conn=args.pub_conn)
 
     if args.mavlink20:
         os.environ["MAVLINK20"] = "1"
@@ -92,10 +100,20 @@ def mavlink_router():
                         help="The mavlink connection string", nargs='?')
     parser.add_argument('--dialect', '-d', default="all",
                         help="The mavlink dialect")
+    parser.add_argument('--mavlink20', '-2',
+                        action="store_true", help="Use mavlink 2.0")
+    parser.add_argument(
+        '--sub_conn', '-s',
+        default="ipc:///tmp/sub",
+        help="The connection string for the subscriber")
+    parser.add_argument(
+        '--pub_conn', '-p',
+        default="ipc:///tmp/pub",
+        help="The connection string for the publisher")
 
     args = parser.parse_args()
 
-    node = Node()
+    node = Node(sub_conn=args.sub_conn, pub_conn=args.pub_conn)
     mavutil.set_dialect(args.dialect)
 
     pub_sink = node.publisher(args.sink_topic, bytes)
